@@ -1,9 +1,8 @@
 package types
 
-import 
-
+import (
 "github.com/cosmos/cosmos-sdk/codec"
-
+)
 
 // RegisterCodec registers concrete message types
 func RegisterCodec(cdc *codec.LegacyAmino) {
