@@ -74,8 +74,9 @@ import (
 	ibcfeekeeper "github.com/cosmos/ibc-go/v8/modules/apps/29-fee/keeper"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
+	stablecoinkeeper "github.com/jamescrystal/mychain/x/stablecoin/keeper"
+	stablecointypes "github.com/jamescrystal/mychain/x/stablecoin/types"
 
-	mychainmodulekeeper "github.com/jamescrystal/mychain/x/mychain/keeper"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"github.com/jamescrystal/mychain/docs"
@@ -141,7 +142,9 @@ type App struct {
 	ScopedICAHostKeeper       capabilitykeeper.ScopedKeeper
 	ScopedKeepers             map[string]capabilitykeeper.ScopedKeeper
 
-	MychainKeeper mychainmodulekeeper.Keeper
+	// Add this line
+	StablecoinKeeper stablecoinkeeper.Keeper
+
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// simulation manager
@@ -245,7 +248,7 @@ func New(
 		&app.NFTKeeper,
 		&app.GroupKeeper,
 		&app.CircuitBreakerKeeper,
-		&app.MychainKeeper,
+		&app.StablecoinKeeper,
 		// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	); err != nil {
 		panic(err)
@@ -345,11 +348,16 @@ func (app *App) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
 // kvStoreKeys returns all the kv store keys registered inside App.
 func (app *App) kvStoreKeys() map[string]*storetypes.KVStoreKey {
 	keys := make(map[string]*storetypes.KVStoreKey)
+
+	// Retrieve existing store keys
 	for _, k := range app.GetStoreKeys() {
 		if kv, ok := k.(*storetypes.KVStoreKey); ok {
 			keys[kv.Name()] = kv
 		}
 	}
+
+	// ✅ Explicitly add stablecoin store key
+	keys[stablecointypes.StoreKey] = storetypes.NewKVStoreKey(stablecointypes.StoreKey)
 
 	return keys
 }
