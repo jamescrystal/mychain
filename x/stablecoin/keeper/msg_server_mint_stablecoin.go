@@ -5,7 +5,7 @@ import (
 
     sdk "github.com/cosmos/cosmos-sdk/types"
     sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-    "mychain/x/stablecoin/types"	
+    "github.com/jamescrystal/mychain/x/stablecoin/types"
 )
 
 // MintStablecoin implements the MsgMintStablecoin handler
